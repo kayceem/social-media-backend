@@ -1,11 +1,14 @@
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 import json
+
+from app.views.user.bussiness import jwt_required
 from . import business
 from django.http.multipartparser import MultiPartParser
 
 
 @csrf_exempt
+@jwt_required
 def create_post(request):
     if not request.method == 'POST':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -17,6 +20,7 @@ def create_post(request):
 
 
 @csrf_exempt
+@jwt_required
 def update_post(request, id):
     if not request.method == 'PATCH':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -32,6 +36,7 @@ def update_post(request, id):
 
 
 @csrf_exempt
+@jwt_required
 def get_all_posts(request):
     if not request.method == 'GET':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -43,6 +48,7 @@ def get_all_posts(request):
 
 
 @csrf_exempt
+@jwt_required
 def get_post_by_id(request, id):
     if not request.method == 'GET':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -54,6 +60,7 @@ def get_post_by_id(request, id):
 
 
 @csrf_exempt
+@jwt_required
 def get_posts_by_username(request, username):
     if not request.method == 'GET':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -65,6 +72,7 @@ def get_posts_by_username(request, username):
 
 
 @csrf_exempt
+@jwt_required
 def delete_post(request, id):
     if not request.method == 'DELETE':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -76,6 +84,7 @@ def delete_post(request, id):
 
 
 @csrf_exempt
+@jwt_required
 def like_post(request, id):
     if not request.method == 'POST':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -88,6 +97,7 @@ def like_post(request, id):
 
 
 @csrf_exempt
+@jwt_required
 def comment_post(request, id):
     if not request.method == 'POST':
         return JsonResponse({"message": "Method not allowed"}, status=400)

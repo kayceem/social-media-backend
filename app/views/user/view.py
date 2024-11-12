@@ -10,6 +10,8 @@ def signup(request):
         return JsonResponse({"message": "Method not allowed"}, status=400)
     try:
         data = json.loads(request.body)
+        if not data:
+            return JsonResponse({"message": "Validation error"}, status=400)
         validated_data = bussiness.validate_data_signup(data=data)
         if not validated_data:
             return JsonResponse({"message": "Validation error"}, status=400)
@@ -20,6 +22,7 @@ def signup(request):
 
 
 @csrf_exempt
+@bussiness.jwt_required
 def update_profile(request, id):
     if not request.method == 'PATCH':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -35,6 +38,7 @@ def update_profile(request, id):
 
 
 @csrf_exempt
+@bussiness.jwt_required
 def get_user_profile_by_id(request, id):
     if not request.method == 'GET':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -48,6 +52,7 @@ def get_user_profile_by_id(request, id):
 
 
 @csrf_exempt
+@bussiness.jwt_required
 def get_user_profile_by_username(request, username):
     if not request.method == 'GET':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -61,6 +66,7 @@ def get_user_profile_by_username(request, username):
 
 
 @csrf_exempt
+@bussiness.jwt_required
 def delete_user(request, id):
     if not request.method == 'DELETE':
         return JsonResponse({"message": "Method not allowed"}, status=400)
@@ -70,4 +76,22 @@ def delete_user(request, id):
             return JsonResponse({"message": "User doesnot exists"}, status=404)
         return JsonResponse({'message': 'User deleted'}, status=204)
     except:
+        return JsonResponse({'message': 'Server Error'}, status=500)
+
+
+@csrf_exempt
+def login(request):
+    if not request.method == 'POST':
+        return JsonResponse({"message": "Method not allowed"}, status=400)
+    try:
+        data = json.loads(request.body)
+        validated_data = bussiness.validate_data_login(data=data)
+        if not validated_data:
+            return JsonResponse({"message": "Validation error"}, status=400)
+        user = bussiness.authenticate_user(data=validated_data)
+        if not user:
+            return JsonResponse({"message": "Invalid credentials"}, status=401)
+        return JsonResponse({"message": "Login successful", "user": user}, status=200)
+    except Exception as e:
+        print(e)
         return JsonResponse({'message': 'Server Error'}, status=500)
