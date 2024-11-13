@@ -5,10 +5,7 @@ from django.forms.models import model_to_dict
 
 def handle_create_post(data, files):
     data_dict = {key: data.get(key) for key in data}
-    try:
-        data_dict['image'] = files.get('image')
-    except:
-        data_dict['image'] = None
+    data_dict['image'] = None
     validated_data = validate_post_create(data_dict)
     if not validated_data:
         return ({"message": "Validation error"}, 400)
