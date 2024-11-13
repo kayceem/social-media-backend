@@ -13,8 +13,8 @@ def create_post(request):
     if not request.method == 'POST':
         return JsonResponse({"message": "Method not allowed"}, status=400)
     try:
-        breakpoint()
-        message, status = business.handle_create_post(request.POST)
+        data = json.loads(request.body)
+        message, status = business.handle_create_post(data)
         return JsonResponse(message, status=status)
     except:
         return JsonResponse({'message': 'Server Error'}, status=500)

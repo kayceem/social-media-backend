@@ -3,8 +3,8 @@ from ..user import accessor as user_accessor
 from django.forms.models import model_to_dict
 
 
-def handle_create_post(data, files):
-    data_dict = {key: data.get(key) for key in data}
+def handle_create_post(data):
+    data_dict = data.copy()
     data_dict['image'] = None
     validated_data = validate_post_create(data_dict)
     if not validated_data:
@@ -74,9 +74,9 @@ def validate_data(data, required_fields, optional_fields):
 def validate_post_create(data):
     required_fields = ['user', 'content']
     optional_fields = ['image']
-    if not data['user']:
+    if not data.get('user'):
         return False
-    user = user_accessor.get_user_by_id(data['user'])
+    user = user_accessor.get_user_by_id(data.get('user'))
     if not user:
         return False
     data['user'] = user
